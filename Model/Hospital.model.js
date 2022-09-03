@@ -11,9 +11,9 @@ const Bed = new Schema({
 const HospitalSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
+    password: { type: String, required: true },
     bedsAvailable: { type: Number, required: true },
     bed: { type: [Bed], required: true },
-    totalBeds: { type: Number, required: true },
     tags: { type: [String], required: true },
     doctorids: { type: [String], required: true },
     desc: { type: String, required: true }

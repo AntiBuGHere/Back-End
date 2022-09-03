@@ -6,25 +6,24 @@ let User = require('../Model/User.model');
 
 
 router.route('/add').post(async (req, res) => {
-    const { totalBeds, doctorids, bed, name, desc, tegs, email } = req.body;
+    const { doctorids, password, bed, name, desc, tags, email } = req.body;
 
     try {
-        if (!email || !totalBeds || !doctorids) {
+        if (!email || !password || !doctorids || !name || !desc) {
             return res.status(404).json({ message: 'enter all details' })
         } else {
             var bedsavailable = 0;
             bed.map((b) => {
                 bedsavailable += b.number
-                // console.log(b.number)
             })
             const hospital = new Hospital({
                 bed,
                 email,
+                password,
                 bedsAvailable: bedsavailable,
-                totalBeds,
                 doctorids,
                 name,
-                tegs,
+                tags,
                 desc
             });
 

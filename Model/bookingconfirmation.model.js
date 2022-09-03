@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const bookingSchema = new Schema({
+const bookingconfirmationSchema = new Schema({
     slots: { type: String, requared: true },
     patientid: { type: String, requared: true },
     sourceuid: { type: String, requared: true },
@@ -12,5 +12,5 @@ const bookingSchema = new Schema({
     {
         timestamps: true,
     });
-const Booking = mongoose.model('booking', bookingSchema);
-module.exports = Booking;
+const bookingconfirmation = mongoose.model('bookingConfirmation', bookingconfirmationSchema);
+module.exports = bookingconfirmation;

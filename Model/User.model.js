@@ -14,7 +14,6 @@ const userSchema = new Schema({
     name: { type: String, required: true },
     dob: { type: String, required: true },
     gender: { type: String, required: true },
-    hospitalbooked: { type: Hospital, required: false },
     doctorid: { type: String, required: false }
 
 }, {

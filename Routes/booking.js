@@ -1,63 +1,66 @@
 const router = require('express').Router();
 let Doctor = require('../Model/Doctors.model');
-let booking = require('../Model/booking.model');
+let Hospital = require('../Model/Hospital.model');
+let Booking = require('../Model/booking.model');
+let BookingConfirmation = require('../Model/bookingconfirmation.model')
 var bcrypt = require('bcryptjs');
 
 
 
-router.route('/book').post(async (req, res) => {
+router.route('/add').post(async (req, res) => {
     // const name = req.body.name;
-    const { slots, patientid, sourceuid, bed, duration, drid } = req.body;
-    if (!bed) {
-        booking.find({ sourceuid: drid }).then((res) => {
-            res.data.duration.map((date) => {
-                if (date in duration) {
-                    res.status(505).json(`already occupied`)
-                }
-                Doctor.find({ sourceuid: drid }).then((res) => {
-                    res.data.availability.push(slots)
+    const { slots, patientid, sourceuid, beduid, duration } = req.body;
+    // res.json({slots, patientid, sourceuid, beduid, duration})
+    if (beduid) {
+        console.log("enter")
+        if(patientid && sourceuid && beduid && duration){
+            console.log("enter")
+            const data = {
+                patientid, sourceuid, beduid, duration
+            }
+            const newBooking = new Booking(data)
+            newBooking.save()
+                .then(()=>{
+                    res.json({ status: "Awaiting confirmation", success: true })
                 })
-            })
-        })
-    }
-})
-
-
-
-
-
-router.route('/signin').post(async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        if (!password || !email) {
-            return res.status(404).json({ message: 'enter all details' })
+                .catch(err=>res.json(err))
         }
-
-        const existingUser = await Doctor.findOne({ email: email })
-        if (existingUser) {
-
-            const ispassCorrect = await bcrypt.compare(password, existingUser.password)
-            if (!ispassCorrect) {
-                return res.json("password is incorrect");
+    }else{
+        console.log("enter")
+        if(patientid && sourceuid && slots && duration){
+            console.log("enter")
+            const data = {
+                patientid, sourceuid, slots, duration
             }
-            else {
-                res.json({ status: "you are signed in", uid: aadharno });
-            }
-        } else { res.json("invalid user") }
-    }
-    catch (error) {
-        res.status(404).json({ message: `${error} Something went wrong` })
+            const newBooking = new Booking(data)
+            newBooking.save()
+                .then(()=>{
+                    res.json({ status: "Awaiting confirmation", success: true })
+                })
+                .catch(err=>res.json(err))
+        }
     }
 })
 
-
-router.route('/:email').get((req, res) => {
-    const email = req.params.email;
-    Doctor.findOne({ "email": email })
-        .then(result => res.json(result))
-        .catch(err => res.status(400).json(`Error: ` + err));
-
-});
+router.route('/confirm').post((req,res)=>{
+    const {bookingUid} = req.body;
+    Booking.findOne({"_id":bookingUid})
+        .then((data)=>{
+            const newReq = {
+                patientid:data.patientid, 
+                sourceuid:data.sourceuid, 
+                beduid:data.beduid, 
+                duration:data.duration
+            }
+            console.log()
+            const newBookingConfirmation = new BookingConfirmation(newReq)
+            newBookingConfirmation.save()
+                .then(async()=>{
+                    await Booking.findOneAndDelete({"_id":bookingUid})
+                    res.json({ status: "confirmed", success: true })
+                })
+                .catch(err=>res.json(err))
+        })
+})
 
 module.exports = router;

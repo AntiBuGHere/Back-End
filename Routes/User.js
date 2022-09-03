@@ -29,9 +29,7 @@ router.route('/signup').post(async (req, res) => {
                 gender,
                 password: encryptedPassword,
                 name,
-                hospitalbooked: { id: null, tob: null, bedtype: null },
                 doctorid: null
-
             });
             newUser.save()
                 .then(() => res.json({ status: "you are signed in", uid: newUser._id, success: true }))
