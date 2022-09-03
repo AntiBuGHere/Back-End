@@ -57,6 +57,13 @@ router.route('/').get(async (req, res) => {
         .catch(err => res.status(404).json(`error-> ${err}`))
 })
 
+router.route('/login').post(async (req, res) => {
+    const { email, password } = req.body
+    Hospital.findOne({email,password})
+        .then(hospital => res.json(hospital))
+        .catch(err => res.status(404).json(`wrongUsernamePassword`))
+})
+
 router.route('/bed').get(async (req, res) => {
     Hospital.find({ bedsAvailable: { $gt: 0 } })
         .then(hospital => res.json(hospital.map(h => `bedsAvailable: ${h.bedsAvailable} name: ${h.name}`)))

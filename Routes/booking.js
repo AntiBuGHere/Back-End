@@ -9,14 +9,14 @@ var bcrypt = require('bcryptjs');
 
 router.route('/add').post(async (req, res) => {
     // const name = req.body.name;
-    const { slots, patientid, sourceuid, beduid, duration } = req.body;
+    const { slots, patientid, sourceuid, beduid, duration, patientName, bedType } = req.body;
     // res.json({slots, patientid, sourceuid, beduid, duration})
     if (beduid) {
-        console.log("enter")
-        if(patientid && sourceuid && beduid && duration){
-            console.log("enter")
+        // console.log("enter")
+        if(patientid && sourceuid && beduid && duration && patientName && bedType){
+            // console.log("enter")
             const data = {
-                patientid, sourceuid, beduid, duration
+                patientid, sourceuid, beduid, duration, patientName, bedType
             }
             const newBooking = new Booking(data)
             newBooking.save()
@@ -26,11 +26,11 @@ router.route('/add').post(async (req, res) => {
                 .catch(err=>res.json(err))
         }
     }else{
-        console.log("enter")
+        // console.log("enter")
         if(patientid && sourceuid && slots && duration){
-            console.log("enter")
+            // console.log("enter")
             const data = {
-                patientid, sourceuid, slots, duration
+                patientid, sourceuid, slots, duration, patientName
             }
             const newBooking = new Booking(data)
             newBooking.save()
@@ -50,7 +50,9 @@ router.route('/confirm').post((req,res)=>{
                 patientid:data.patientid, 
                 sourceuid:data.sourceuid, 
                 beduid:data.beduid, 
-                duration:data.duration
+                duration:data.duration,
+                patientName:data.patientName,
+                bedType:data.bedType
             }
             console.log()
             const newBookingConfirmation = new BookingConfirmation(newReq)
@@ -61,6 +63,24 @@ router.route('/confirm').post((req,res)=>{
                 })
                 .catch(err=>res.json(err))
         })
+})
+
+router.route('/:id').get((req,res)=>{
+    const sourceuid = req.params.id
+    Booking.find({sourceuid})
+        .then(data=>{
+            res.json({data})
+        })
+
+})
+
+router.route('/confirmed/:id').get((req,res)=>{
+    const sourceuid = req.params.id
+    BookingConfirmation.find({sourceuid})
+        .then(data=>{
+            res.json({data})
+        })
+
 })
 
 module.exports = router;

@@ -4,13 +4,12 @@ const Schema = mongoose.Schema;
 
 const doctorSchema = new Schema({
     name: { type: String, required: true },
-    specialisation: { type: String, required: true },
+    specialization: { type: String, required: true },
     email: { type: String, required: true },
     tags: { type: [String], required: true },
     desc: { type: String },
     slots: { type: [String], required: true },
-    availability: { type: [String] },
-    password: { type: String }
+    password: { type: String, required: true }
 
 }, {
     timestamps: true,

@@ -7,7 +7,9 @@ const bookingSchema = new Schema({
     patientid: { type: String, requared: true },
     sourceuid: { type: String, requared: true },
     beduid: { type: String, requared: true },
-    duration: { type: String, required: true }
+    duration: { type: String, required: true },
+    patientName: { type: String, required: true },
+    bedType: { type: String }
 },
     {
         timestamps: true,
