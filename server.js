@@ -21,10 +21,12 @@ const User = require('./Routes/User')
 const medHistory = require('./Routes/medHistory')
 const hospital = require('./Routes/Hospital')
 const doctor = require('./Routes/doctor')
+const booking = require('./Routes/booking')
 app.use('/user', User)
 app.use('/medHistory', medHistory)
 app.use('/hospital', hospital)
 app.use('/doctor', doctor)
+app.use('/booking', booking)
 
 
 app.listen(port, () => {

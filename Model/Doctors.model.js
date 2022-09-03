@@ -9,6 +9,7 @@ const doctorSchema = new Schema({
     tags: { type: [String], required: true },
     desc: { type: String },
     slots: { type: [String], required: true },
+    availability: { type: [String] },
     password: { type: String }
 
 }, {

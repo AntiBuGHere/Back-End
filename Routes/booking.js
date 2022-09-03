@@ -1,43 +1,27 @@
 const router = require('express').Router();
 let Doctor = require('../Model/Doctors.model');
+let booking = require('../Model/booking.model');
 var bcrypt = require('bcryptjs');
 
 
 
-router.route('/signup').post(async (req, res) => {
+router.route('/book').post(async (req, res) => {
     // const name = req.body.name;
-    const { name, email, tags, desc, specialisation, slots, password, cpassword } = req.body;
-    const existingUser = await Doctor.findOne({ email: email });
-
-
-    if (existingUser) {
-        res.json('user already exists');
-        // console.log(existingUser);
-
-    }
-    else {
-        if (password !== cpassword) {
-            res.status(500).json('cpassword and password are not same');
-        }
-        else {
-            const salt = await bcrypt.genSaltSync(10);
-            const encryptedPassword = await bcrypt.hashSync(password, salt);
-            const newDoctor = new Doctor({
-                email,
-                availability: [],
-                slots,
-                tags,
-                desc,
-                specialisation,
-                name,
-                password: encryptedPassword
-            });
-            newDoctor.save()
-                .then(() => res.json('user added'))
-                .catch(err => res.status(400).json('Error: ' + err));
-        }
+    const { slots, patientid, sourceuid, bed, duration, drid } = req.body;
+    if (!bed) {
+        booking.find({ sourceuid: drid }).then((res) => {
+            res.data.duration.map((date) => {
+                if (date in duration) {
+                    res.status(505).json(`already occupied`)
+                }
+                Doctor.find({ sourceuid: drid }).then((res) => {
+                    res.data.availability.push(slots)
+                })
+            })
+        })
     }
 })
+
 
 
 
