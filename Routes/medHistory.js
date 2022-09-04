@@ -4,7 +4,7 @@ let medHistory = require('../Model/medHistory.model');
 
 
 router.route('/add').post(async (req, res) => {
-    const { aadharno, name, prescriptions } = req.body;
+    const { aadharno, name, prescriptions, prescribedBy } = req.body;
 
     try {
         if (!name || !aadharno || !prescriptions) {
@@ -14,6 +14,7 @@ router.route('/add').post(async (req, res) => {
                 aadharno,
                 name,
                 prescriptions,
+                prescribedBy,
                 date: Date.now()
             });
 
@@ -32,7 +33,7 @@ router.route('/add').post(async (req, res) => {
 router.route('/:aadharno').get((req, res) => {
     const aadharno = req.params.aadharno;
 
-    medHistory.findOne({ "aadharno": aadharno })
+    medHistory.find({ "aadharno": aadharno })
         .then(result => res.json(result))
 })
 
